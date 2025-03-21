@@ -1,5 +1,5 @@
 {
-  "name": "grok-speech-to-text",
+  "name": "groq-speech-to-text",
   "private": true,
   "version": "0.0.0",
   "type": "module",
