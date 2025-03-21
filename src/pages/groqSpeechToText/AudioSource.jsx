@@ -32,16 +32,16 @@ const AudioSource = ({
                 file, apiKey
             })
             console.log('result: ', result);
-    
+
             setTranscript({
                 words: result.returnResult.transcription,
-    
+
                 transcription: result.returnResult.transcription,
                 contextual_analysis: result.returnResult.contextual_analysis,
                 contextual_analysis_status: result.returnResult.contextual_analysis_status
             });
         } catch (error) {
-            
+
         } finally {
             setIsProcessing(false);
         }
@@ -98,6 +98,21 @@ const AudioSource = ({
 
     return (
         <div className="col-span-1">
+
+            <a
+                href='https://groq.com'
+            >
+                <div className='bg-white p-6 rounded-lg shadow-sm mb-3 text-center'>
+                    <img
+                        src='/powered_by/PBG mark1 color.svg'
+                        style={{
+                            width: '100%',
+                            height: '60px',
+                        }}
+                    />
+                </div>
+            </a>
+
             <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
                 <h2 className="text-lg font-semibold mb-4">Audio Source</h2>
 
