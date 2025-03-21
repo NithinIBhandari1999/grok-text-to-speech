@@ -12,7 +12,7 @@ const Header = () => {
                     <h1 className="text-xl font-bold text-gray-900">Audio Moderation Suite</h1>
                 </div>
                 <div className="flex items-center space-x-4">
-                    <a href="https://github.com/groq/groq-typescript" className="px-4 py-2 text-sm bg-gray-800 text-white border border-gray-300 rounded shadow-sm hover:bg-gray-700">
+                    <a href="https://github.com/NithinIBhandari1999/grok-text-to-speech" className="px-4 py-2 text-sm bg-gray-800 text-white border border-gray-300 rounded shadow-sm hover:bg-gray-700">
                         Github
                     </a>
                     {/*
