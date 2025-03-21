@@ -12,7 +12,6 @@ const AudioSource = ({
 }) => {
     // State for audio file and processing
     const [file, setFile] = useState(null);
-    // const [isProcessing, setIsProcessing] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
@@ -23,13 +22,15 @@ const AudioSource = ({
     const [apiKey, setApiKey] = useState('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');
 
     // Implement the API call to process audio
-    const processAudio = async () => {
+    const processAudio = async ({
+        tempFile,
+    }) => {
         setIsProcessing(true);
         setError(null);
 
         try {
             const result = await processAudioFunc({
-                file, apiKey
+                file: tempFile, apiKey
             })
             console.log('result: ', result);
 
@@ -96,6 +97,34 @@ const AudioSource = ({
         return duration ? (currentTime / duration) * 100 : 0;
     };
 
+    const getSampleAudio = ({
+        audioExamplePath
+    }) => {
+        fetch(audioExamplePath)
+            .then(response => response.blob())
+            .then(async blob => {
+                const selectedFile = new File([blob], 'breaking-bad-scene.mp3', { type: 'audio/mpeg' });
+                console.log(selectedFile);
+                setFile(selectedFile);
+
+                if (audioRef.current) {
+                    const url = URL.createObjectURL(selectedFile);
+                    audioRef.current.src = url;
+                    audioRef.current.onloadedmetadata = () => {
+                        setDuration(audioRef.current.duration);
+                    };
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                processAudio({
+                    tempFile: selectedFile,
+                });
+
+            })
+            .catch(error => console.error('Error downloading the file:', error));
+    }
+
     return (
         <div className="col-span-1">
 
@@ -155,6 +184,51 @@ const AudioSource = ({
                     </div>
                 </div>
 
+                {/* Audio Example */}
+                <div className="mb-4">
+                    <h3 className="text-md font-medium mb-2">Audio Example</h3>
+                    <button
+                        onClick={() => {
+                            const audioExamplePath = '/audio_sample/About-llm-Jonathan-Ross-Groq.mp3';
+
+                            getSampleAudio({
+                                audioExamplePath,
+                            })
+                        }}
+                        className="p-2 rounded-full bg-blue-500 text-white shadow m-1"
+                    >
+                        About llm by Jonathan Ross Groq
+                    </button>
+                    <button
+                        onClick={() => {
+                            const audioExamplePath = '/audio_sample/breaking-bad-gus-fires-walt-scene-S4-E11.mp3';
+
+                            getSampleAudio({
+                                audioExamplePath,
+                            })
+                        }}
+                        className="p-2 rounded-full bg-blue-500 text-white shadow  m-1"
+                    >
+                        Play Breaking Bad Scene
+                    </button>
+                    <button
+                        onClick={() => {
+                            const audioExamplePath = '/audio_sample/planning-a-heist.mp3';
+
+                            getSampleAudio({
+                                audioExamplePath,
+                            })
+                        }}
+                        className="p-2 rounded-full bg-blue-500 text-white shadow m-1"
+                    >
+                        Planning a Heist
+                    </button>
+                    {/* <audio controls className="w-full">
+                        <source src="/audio_sample/breaking-bad-gus-fires-walt-scene-S4-E11.mp3" type="audio/mpeg" />
+                        Your browser does not support the audio element.
+                    </audio> */}
+                </div>
+
                 {/* Audio Player */}
                 <div className="mb-4">
                     <audio
@@ -207,7 +281,11 @@ const AudioSource = ({
                 )}
 
                 <button
-                    onClick={processAudio}
+                    onClick={() => {
+                        processAudio({
+                            tempFile: file,
+                        })
+                    }}
                     disabled={!file || !apiKey || isProcessing}
                     className={`w-full py-2 rounded-md ${!file || !apiKey || isProcessing ? 'bg-gray-300 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700 text-white'
                         }`}
